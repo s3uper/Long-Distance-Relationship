@@ -24,6 +24,21 @@
       <tbody id="userTable"></tbody>
     </table>
 
+    <h2>Admin-Tools</h2>
+    <section>
+      <h3>Neuen Admin hinzufügen</h3>
+      <input type="text" id="newAdminUser" placeholder="Benutzername" />
+      <input type="password" id="newAdminPass" placeholder="Passwort" />
+      <button onclick="addAdmin()">Admin hinzufügen</button>
+    </section>
+
+    <section>
+      <h3>Passwort ändern</h3>
+      <input type="text" id="changePassUser" placeholder="Benutzername" />
+      <input type="password" id="changePassNew" placeholder="Neues Passwort" />
+      <button onclick="changePassword()">Passwort ändern</button>
+    </section>
+
     <button onclick="logout()">Abmelden</button>
   </div>
 
@@ -62,6 +77,49 @@
         localStorage.removeItem("user_" + username);
         loadUsers();
       }
+    }
+
+    function addAdmin() {
+      const username = document.getElementById("newAdminUser").value;
+      const password = document.getElementById("newAdminPass").value;
+
+      if (!username || !password) {
+        alert("Bitte Benutzername und Passwort eingeben.");
+        return;
+      }
+
+      if (localStorage.getItem("user_" + username)) {
+        alert("Benutzername existiert bereits.");
+        return;
+      }
+
+      const id = "#" + Math.floor(1000 + Math.random() * 9000);
+      const newAdmin = { pass: password, id, partner: null };
+      localStorage.setItem("user_" + username, JSON.stringify(newAdmin));
+      alert(`Admin ${username} wurde erfolgreich hinzugefügt.`);
+      loadUsers();
+    }
+
+    function changePassword() {
+      const username = document.getElementById("changePassUser").value;
+      const newPassword = document.getElementById("changePassNew").value;
+
+      if (!username || !newPassword) {
+        alert("Bitte Benutzername und neues Passwort eingeben.");
+        return;
+      }
+
+      const userData = JSON.parse(localStorage.getItem("user_" + username));
+
+      if (!userData) {
+        alert("Benutzer nicht gefunden.");
+        return;
+      }
+
+      userData.pass = newPassword;
+      localStorage.setItem("user_" + username, JSON.stringify(userData));
+      alert(`Passwort für ${username} wurde erfolgreich geändert.`);
+      loadUsers();
     }
 
     function logout() {
