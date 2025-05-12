@@ -3,113 +3,25 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard</title>
+  <title>Dashboard | Fernbeziehungs-Tool</title>
   <link rel="stylesheet" href="style.css" />
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore.js"></script>
 </head>
 <body>
   <div class="container">
     <h1>Willkommen im Dashboard</h1>
-    <p id="userInfo"></p>
+    <p id="userNameDisplay"></p>
+    <p id="userIdDisplay"></p>
 
-    <section>
-      <h2>Partner verbinden</h2>
-      <p>Gib den Benutzernamen und die ID deines Partners ein:</p>
-      <input type="text" id="partnerUser" placeholder="Benutzername" />
-      <input type="text" id="partnerId" placeholder="ID (z.B. #1234)" />
-      <button onclick="sendPartnerRequest()">Anfrage senden</button>
-    </section>
+    <h2>Verbinde dich mit deinem Partner</h2>
+    <input type="text" id="partnerUsername" placeholder="Benutzername deines Partners" />
+    <button onclick="connectWithPartner()">Partner verbinden</button>
 
-    <section>
-      <h2>Partner-Anfragen</h2>
-      <div id="requests"></div>
-    </section>
-
-    <section>
-      <h2>Aktueller Partner</h2>
-      <div id="currentPartner"></div>
-    </section>
-
-    <button onclick="logout()">Abmelden</button>
+    <p><a href="index.html">Zurück zum Login</a></p>
   </div>
 
-  <script>
-    const currentUser = localStorage.getItem("activeUser");
-    const userData = JSON.parse(localStorage.getItem("user_" + currentUser));
-
-    if (!currentUser || !userData) {
-      window.location.href = "index.html";
-    } else {
-      document.getElementById("userInfo").textContent = `Eingeloggt als ${currentUser} (${userData.id})`;
-    }
-
-    function sendPartnerRequest() {
-      const partnerUser = document.getElementById("partnerUser").value;
-      const partnerId = document.getElementById("partnerId").value;
-      const partnerData = JSON.parse(localStorage.getItem("user_" + partnerUser));
-
-      if (!partnerData || partnerData.id !== partnerId) {
-        alert("Benutzername oder ID falsch.");
-        return;
-      }
-
-      const requestsKey = "requests_" + partnerUser;
-      let requests = JSON.parse(localStorage.getItem(requestsKey)) || [];
-
-      if (!requests.includes(currentUser)) {
-        requests.push(currentUser);
-        localStorage.setItem(requestsKey, JSON.stringify(requests));
-        alert("Anfrage gesendet!");
-      } else {
-        alert("Du hast bereits eine Anfrage gesendet.");
-      }
-    }
-
-    function loadRequests() {
-      const requests = JSON.parse(localStorage.getItem("requests_" + currentUser)) || [];
-      const container = document.getElementById("requests");
-      container.innerHTML = "";
-      requests.forEach(reqUser => {
-        const reqData = JSON.parse(localStorage.getItem("user_" + reqUser));
-        const div = document.createElement("div");
-        div.innerHTML = `${reqUser} (${reqData.id}) <button onclick=\"confirmPartner('${reqUser}')\">Bestätigen</button>`;
-        container.appendChild(div);
-      });
-    }
-
-    function confirmPartner(partnerUser) {
-      const partnerData = JSON.parse(localStorage.getItem("user_" + partnerUser));
-      const thisData = JSON.parse(localStorage.getItem("user_" + currentUser));
-
-      thisData.partner = partnerUser;
-      partnerData.partner = currentUser;
-
-      localStorage.setItem("user_" + currentUser, JSON.stringify(thisData));
-      localStorage.setItem("user_" + partnerUser, JSON.stringify(partnerData));
-
-      // Clear requests
-      localStorage.removeItem("requests_" + currentUser);
-      loadRequests();
-      loadPartner();
-    }
-
-    function loadPartner() {
-      const container = document.getElementById("currentPartner");
-      const thisData = JSON.parse(localStorage.getItem("user_" + currentUser));
-      if (thisData.partner) {
-        const partnerData = JSON.parse(localStorage.getItem("user_" + thisData.partner));
-        container.textContent = `${thisData.partner} (${partnerData.id})`;
-      } else {
-        container.textContent = "Noch kein Partner verbunden.";
-      }
-    }
-
-    function logout() {
-      localStorage.removeItem("activeUser");
-      window.location.href = "index.html";
-    }
-
-    loadRequests();
-    loadPartner();
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
