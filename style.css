@@ -49,3 +49,12 @@ section {
   background: #f0e6f8;
   border-radius: 6px;
 }
+
+.datenschutz {
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+.datenschutz label {
+  display: inline;
+}

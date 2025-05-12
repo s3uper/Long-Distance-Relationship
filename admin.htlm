@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Dashboard</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Admin-Bereich</h1>
+    <p>Alle registrierten Benutzerkonten:</p>
+
+    <table style="width:100%; margin-top: 20px;">
+      <thead>
+        <tr>
+          <th>Benutzername</th>
+          <th>ID</th>
+          <th>Passwort</th>
+          <th>Partner</th>
+          <th>Aktion</th>
+        </tr>
+      </thead>
+      <tbody id="userTable"></tbody>
+    </table>
+
+    <button onclick="logout()">Abmelden</button>
+  </div>
+
+  <script>
+    const currentUser = localStorage.getItem("activeUser");
+    if (currentUser !== "admin") {
+      window.location.href = "index.html";
+    }
+
+    function loadUsers() {
+      const tbody = document.getElementById("userTable");
+      tbody.innerHTML = "";
+
+      for (let i = 0; i < localStorage.length; i++) {
+        const key = localStorage.key(i);
+        if (key.startsWith("user_") && key !== "user_admin") {
+          const username = key.replace("user_", "");
+          const data = JSON.parse(localStorage.getItem(key));
+          const row = document.createElement("tr");
+
+          row.innerHTML = `
+            <td>${username}</td>
+            <td>${data.id}</td>
+            <td>${data.pass}</td>
+            <td>${data.partner || "-"}</td>
+            <td><button onclick="deleteUser('${username}')">Löschen</button></td>
+          `;
+
+          tbody.appendChild(row);
+        }
+      }
+    }
+
+    function deleteUser(username) {
+      if (confirm(`Möchtest du ${username} wirklich löschen?`)) {
+        localStorage.removeItem("user_" + username);
+        loadUsers();
+      }
+    }
+
+    function logout() {
+      localStorage.removeItem("activeUser");
+      window.location.href = "index.html";
+    }
+
+    loadUsers();
+  </script>
+</body>
+</html>

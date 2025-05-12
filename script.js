@@ -1,35 +1,47 @@
-function updateCountdown() {
-  const input = document.getElementById("dateInput").value;
-  const countdown = document.getElementById("countdown");
+function generateId() {
+  return '#' + Math.floor(1000 + Math.random() * 9000);
+}
 
-  if (!input) {
-    countdown.innerText = "Bitte Datum eingeben.";
+function register() {
+  const user = document.getElementById("regUser").value;
+  const pass = document.getElementById("regPass").value;
+  const privacyAccepted = document.getElementById("privacyCheck").checked;
+
+  if (!user || !pass) {
+    alert("Bitte Benutzername und Passwort eingeben.");
     return;
   }
 
-  const future = new Date(input);
-  const today = new Date();
-  const diff = future - today;
-  const days = Math.ceil(diff / (1000 * 60 * 60 * 24));
+  if (!privacyAccepted) {
+    alert("Bitte akzeptiere die Datenschutzerklärung.");
+    return;
+  }
 
-  if (days >= 0) {
-    countdown.innerText = `Noch ${days} Tag(e) bis zum Wiedersehen ❤️`;
+  const id = generateId();
+  localStorage.setItem("user_" + user, JSON.stringify({ pass, id, partner: null }));
+  alert(`Registrierung erfolgreich! Deine ID ist ${id}. Du kannst dich nun einloggen.`);
+}
+
+function login() {
+  const user = document.getElementById("loginUser").value;
+  const pass = document.getElementById("loginPass").value;
+  const storedData = localStorage.getItem("user_" + user);
+
+  if (!storedData) {
+    alert("Benutzer nicht gefunden.");
+    return;
+  }
+
+  const data = JSON.parse(storedData);
+  if (data.pass === pass) {
+    localStorage.setItem("activeUser", user);
+    alert("Login erfolgreich!");
+    if (user === "admin") {
+      window.location.href = "admin.html";
+    } else {
+      window.location.href = "dashboard.html";
+    }
   } else {
-    countdown.innerText = "Das Datum liegt in der Vergangenheit.";
+    alert("Falsche Anmeldedaten.");
   }
 }
-
-function saveNote() {
-  const note = document.getElementById("noteInput").value;
-  if (note.trim() === "") return;
-  localStorage.setItem("loveNote", note);
-  displayNote();
-}
-
-function displayNote() {
-  const note = localStorage.getItem("loveNote") || "(Noch keine Nachricht gespeichert.)";
-  document.getElementById("noteDisplay").innerText = note;
-}
-
-document.getElementById("dateInput").addEventListener("change", updateCountdown);
-document.addEventListener("DOMContentLoaded", displayNote);

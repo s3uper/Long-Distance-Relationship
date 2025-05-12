@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fernbeziehungs-Tool</title>
+  <title>Login | Fernbeziehungs-Tool</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
@@ -11,16 +11,25 @@
     <h1>Fernbeziehungs-Tool</h1>
 
     <section>
-      <h2>Countdown bis zum Wiedersehen</h2>
-      <input type="date" id="dateInput" />
-      <p id="countdown"></p>
+      <h2>Login</h2>
+      <input type="text" id="loginUser" placeholder="Benutzername" />
+      <input type="password" id="loginPass" placeholder="Passwort" />
+      <button onclick="login()">Einloggen</button>
     </section>
 
     <section>
-      <h2>Nachrichten / Notizen</h2>
-      <textarea id="noteInput" placeholder="Schreib deinem Lieblingsmenschen etwas..." rows="4"></textarea>
-      <button onclick="saveNote()">Speichern</button>
-      <div id="noteDisplay"></div>
+      <h2>Registrieren</h2>
+      <input type="text" id="regUser" placeholder="Neuer Benutzername" />
+      <input type="password" id="regPass" placeholder="Neues Passwort" />
+
+      <div class="datenschutz">
+        <input type="checkbox" id="privacyCheck" />
+        <label for="privacyCheck">
+          Ich habe die <a href="#" onclick="alert('Hier kommt deine Datenschutzerklärung. Du kannst diese Seite später noch ausbauen.'); return false;">Datenschutzerklärung</a> gelesen und akzeptiere sie.
+        </label>
+      </div>
+
+      <button onclick="register()">Registrieren</button>
     </section>
   </div>
 
