@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fernbeziehungs-Tool</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div class="container">
+    <h1>Fernbeziehungs-Tool</h1>
+
+    <section>
+      <h2>Countdown bis zum Wiedersehen</h2>
+      <input type="date" id="dateInput" />
+      <p id="countdown"></p>
+    </section>
+
+    <section>
+      <h2>Nachrichten / Notizen</h2>
+      <textarea id="noteInput" placeholder="Schreib deinem Lieblingsmenschen etwas..." rows="4"></textarea>
+      <button onclick="saveNote()">Speichern</button>
+      <div id="noteDisplay"></div>
+    </section>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
